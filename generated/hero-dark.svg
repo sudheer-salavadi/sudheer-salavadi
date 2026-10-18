@@ -13,8 +13,6 @@ text{font-family:VT,ui-monospace,Menlo,monospace;fill:#eaf2ff}
 .c2{fill:#00e5ff}
 .roll{animation:roll 8s linear infinite}
 @keyframes roll{from{transform:translateY(-120px)}to{transform:translateY(290px)}}
-.blink{animation:blink 1.4s steps(1) infinite}
-@keyframes blink{50%{opacity:0}}
 .flicker{animation:flicker 6s infinite}
 @keyframes flicker{0%,40%,44%,76%,100%{opacity:1}42%{opacity:.84}78%{opacity:.92}}
 .ga{opacity:0;animation:tear 4.6s steps(1) infinite}
@@ -38,7 +36,6 @@ text{font-family:VT,ui-monospace,Menlo,monospace;fill:#eaf2ff}
 <g class="flicker">
 <polygon points="34,38 47,45 34,52" fill="#3dff9a" filter="url(#glow)"/>
 <text x="56" y="52" font-size="28" class="osd" filter="url(#glow)">PLAY</text>
-<text x="118" y="52" font-size="28" class="dim">SP</text>
 <text x="806" y="52" font-size="28" text-anchor="end" class="osd" filter="url(#glow)">CH 03</text>
 <g>
   <text x="420" y="146" font-size="96" text-anchor="middle" class=" ch c1" transform="translate(-3 0)">SUDHEER SALAVADI</text>

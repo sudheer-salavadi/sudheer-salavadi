@@ -7,14 +7,14 @@ const SILK = font("Silkscreen");
 
 export const THEMES = {
   dark: {
-    bg: "#05070b", fg: "#eaf2ff", dim: "#8190a6", osd: "#3dff9a", rec: "#ff3b3b",
+    bg: "#05070b", fg: "#eaf2ff", dim: "#8190a6", osd: "#3dff9a",
     c1: "#ff2bd6", c2: "#00e5ff", blend: "screen", glow: 2.2,
     scan: "rgba(0,0,0,0.5)", noise: 0.07, vig: "#000", vigA: 0.85,
     roll: "#cfe6ff", rollA: 0.07, bez1: "#1b1e23", bez2: "#0a0b0e", rim: "rgba(255,255,255,0.07)",
     grid: "#1a2433", trace: "#3dff9a", other: "#4a5568",
   },
   light: {
-    bg: "#f2ecdf", fg: "#16151a", dim: "#8a8170", osd: "#d10f2f", rec: "#d10f2f",
+    bg: "#f2ecdf", fg: "#16151a", dim: "#8a8170", osd: "#d10f2f",
     c1: "#ff2a4d", c2: "#1f5bff", blend: "multiply", glow: 0,
     scan: "rgba(70,50,20,0.11)", noise: 0.1, vig: "#5c4a2c", vigA: 0.3,
     roll: "#3a2a10", rollA: 0.06, bez1: "#e4dccb", bez2: "#cdc3ad", rim: "rgba(0,0,0,0.09)",
@@ -93,8 +93,6 @@ text{font-family:VT,ui-monospace,Menlo,monospace;fill:${t.fg}}
 .c2{fill:${t.c2}}
 .roll{animation:roll 8s linear infinite}
 @keyframes roll{from{transform:translateY(-120px)}to{transform:translateY(${h + 40}px)}}
-.blink{animation:blink 1.4s steps(1) infinite}
-@keyframes blink{50%{opacity:0}}
 .flicker{animation:flicker 6s infinite}
 @keyframes flicker{0%,40%,44%,76%,100%{opacity:1}42%{opacity:.84}78%{opacity:.92}}
 ${css}
@@ -149,7 +147,6 @@ export function heroCard(t, { name, tagline, date }) {
 @keyframes tear{0%,86%,100%{opacity:0;transform:none}87%{opacity:1;transform:translateX(-22px)}89%{opacity:1;transform:translateX(14px)}91%{opacity:1;transform:translateX(-6px)}93%{opacity:0}}`,
     body: `${playIcon(t, 34, 52)}
 <text x="56" y="52" font-size="28" class="osd" ${glowAttr(t)}>PLAY</text>
-<text x="118" y="52" font-size="28" class="dim">SP</text>
 <text x="${W - 34}" y="52" font-size="28" text-anchor="end" class="osd" ${glowAttr(t)}>CH 03</text>
 ${chroma(t, nameText, { x: cx, y: nameY, size: 96, anchor: "middle", dx: 3, glow: true })}
 ${slice("sa", "ga", 92, 106)}
@@ -216,9 +213,8 @@ export function statsCard(t, s) {
     title: "GitHub activity",
     css: `.beam{offset-path:path("${d}");offset-rotate:0deg;animation:sweep 7s linear infinite}
 @keyframes sweep{from{offset-distance:0%}to{offset-distance:100%}}`,
-    body: `<circle cx="40" cy="45" r="6" fill="${t.rec}" class="blink" ${glowAttr(t)}/>
-<text x="54" y="52" font-size="28" fill="${t.rec}">REC</text>
-<text x="106" y="50" font-size="11" class="silk dim">SIGNAL STATUS · PUBLIC + PRIVATE</text>
+    body: `${playIcon(t, 34, 52)}
+<text x="56" y="52" font-size="28" class="osd" ${glowAttr(t)}>ACTIVITY</text>
 <text x="${right}" y="52" font-size="28" text-anchor="end" class="dim">${s.since} <tspan class="osd">▸</tspan> ${s.year}</text>
 ${metrics}
 <g stroke="${t.grid}" stroke-width="1" stroke-dasharray="2 3">${grid}</g>
@@ -321,9 +317,8 @@ export function timeCard(t, { grid, timeZone }) {
     css: `.sweep{transform-origin:${cx}px ${cy}px;animation:spin 6s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}`,
     body: `${playIcon(t, 34, 52)}
-<text x="56" y="52" font-size="28" class="osd" ${glowAttr(t)}>TIMECODE</text>
-<text x="168" y="50" font-size="11" class="silk dim">COMMITS BY HOUR · ${esc(tz)}</text>
-<text x="${W - 34}" y="52" font-size="28" text-anchor="end" class="dim"><tspan class="osd">${fmt(total)}</tspan> COMMITS</text>
+<text x="56" y="52" font-size="28" class="osd" ${glowAttr(t)}>COMMIT HOURS</text>
+<text x="${W - 34}" y="52" font-size="28" text-anchor="end" class="dim"><tspan class="osd">${fmt(total)}</tspan> COMMITS · ${esc(tz)}</text>
 <g stroke="${t.grid}" stroke-width="1" stroke-dasharray="2 3">${rings}
 <line x1="${cx - R}" y1="${cy}" x2="${cx + R}" y2="${cy}"/><line x1="${cx}" y1="${cy - R}" x2="${cx}" y2="${cy + R}"/></g>
 <g stroke="${t.dim}" stroke-width="1">${ticks}</g>
@@ -414,8 +409,7 @@ ${[0.3, 0.55, 0.8].map((f) => {
 .wave{opacity:.15;animation:wave 1.4s ease-out infinite}
 @keyframes wave{0%{opacity:.9}100%{opacity:.1}}`,
     body: `${playIcon(t, 34, 52)}
-<text x="56" y="52" font-size="28" class="osd" ${glowAttr(t)}>UPLINK</text>
-<text x="146" y="50" font-size="11" class="silk dim">DEPLOY TARGETS</text>
+<text x="56" y="52" font-size="28" class="osd" ${glowAttr(t)}>DEPLOY TARGETS</text>
 <text x="${W - 34}" y="52" font-size="28" text-anchor="end" class="dim"><tspan class="osd">${targets.length}</tspan> TARGETS</text>
 ${rows.map((r) => r.line).join("\n")}
 ${mast}
@@ -471,8 +465,7 @@ export function languagesCard(t, { entries, colors, repoCount, repoTotal }) {
     css: `.eq{transform-box:fill-box;transform-origin:50% 100%;animation:eq 1.4s ease-in-out infinite alternate}
 @keyframes eq{from{transform:scaleY(1)}to{transform:scaleY(.82)}}`,
     body: `${playIcon(t, 34, 52)}
-<text x="56" y="52" font-size="28" class="osd" ${glowAttr(t)}>SPECTRUM</text>
-<text x="168" y="50" font-size="11" class="silk dim">LANGUAGES BY VOLUME</text>
+<text x="56" y="52" font-size="28" class="osd" ${glowAttr(t)}>LANGUAGES</text>
 <text x="${right}" y="52" font-size="28" text-anchor="end" class="dim">INPUT <tspan class="osd">${repoTotal}</tspan> REPOS</text>
 <g stroke="${t.grid}" stroke-width="1" stroke-dasharray="2 3">${scale}</g>
 <g ${glowAttr(t)}><g mask="url(#seg)">${cols.map((c) => c.bar).join("\n")}</g></g>
