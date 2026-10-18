@@ -338,6 +338,94 @@ ${readouts}`,
   });
 }
 
+const DEST = {
+  Cloudflare: { kind: "EDGE", color: ["#f38020", "#e06a00"] },
+  Vercel: { kind: "EDGE", color: [null, null] },
+  Netlify: { kind: "EDGE", color: ["#00c7b7", "#00968a"] },
+  Firebase: { kind: "CLOUD", color: ["#ffca28", "#e09400"] },
+  "GitHub Pages": { kind: "STATIC", color: [null, null] },
+  "Fly.io": { kind: "CLOUD", color: ["#a78bfa", "#7c3aed"] },
+  Kubernetes: { kind: "CLUSTER", color: ["#5b8def", "#326ce5"] },
+  Docker: { kind: "CONTAINER", color: ["#2496ed", "#1d7fc4"] },
+  iOS: { kind: "MOBILE", color: [null, null] },
+  Android: { kind: "MOBILE", color: ["#3ddc84", "#1ea362"] },
+};
+
+export function uplinkCard(t, { targets, repoTotal }) {
+  const top = 112;
+  const pitch = 34;
+  const h = top + targets.length * pitch + 26;
+  const max = Math.max(...targets.map(([, c]) => c), 1);
+  const sx = 150;
+  const sy = top + ((targets.length - 1) * pitch) / 2 - 34;
+  const dotX = 372;
+  const segs = 8;
+
+  const rows = targets.map(([name, count], i) => {
+    const y = top + i * pitch;
+    const d = DEST[name] ?? { kind: "", color: [null, null] };
+    const color = d.color[t === THEMES.dark ? 0 : 1] ?? t.fg;
+    const lit = Math.max(1, Math.round((count / max) * segs));
+    const meter = Array.from(
+      { length: segs },
+      (_, k) => `<rect x="${640 + k * 13}" y="${y - 13}" width="10" height="14" rx="1" fill="${k < lit ? color : "none"}" stroke="${k < lit ? "none" : t.grid}"/>`,
+    ).join("");
+    const path = `M${sx},${sy} C${sx + 110},${sy} ${dotX - 170},${y - 5} ${dotX - 60},${y - 5}`;
+    return {
+      line: `<path d="${path}" fill="none" stroke="${t.grid}" stroke-width="1"/>
+<path d="${path}" fill="none" stroke="${color}" stroke-width="2" stroke-dasharray="3 13" class="flow" style="animation-duration:${(1.4 + (i % 3) * 0.4).toFixed(1)}s"/>`,
+      row: `<text x="${dotX - 52}" y="${y}" font-size="18" class="dim">CH${String(i + 1).padStart(2, "0")}</text>
+<circle cx="${dotX}" cy="${y - 5}" r="5" fill="${color}" ${glowAttr(t)}/>
+<text x="${dotX + 16}" y="${y + 2}" font-size="26">${esc(name)}</text>
+<text x="548" y="${y - 1}" font-size="9" class="silk dim">${d.kind}</text>
+<g ${glowAttr(t)}>${meter}</g>
+<text x="${W - 34}" y="${y + 1}" font-size="20" text-anchor="end">${count} <tspan class="dim">REPO${count > 1 ? "S" : ""}</tspan></text>`,
+    };
+  });
+
+  // lattice mast with the signal source at its tip
+  const mb = sy + 104;
+  const mast = `<g stroke="${t.dim}" stroke-width="1.5" fill="none">
+<path d="M${sx},${sy + 8} L${sx - 26},${mb} M${sx},${sy + 8} L${sx + 26},${mb}"/>
+${[0.3, 0.55, 0.8].map((f) => {
+    const y = sy + 8 + f * (mb - sy - 8);
+    const w = f * 26;
+    return `<path d="M${sx - w},${y} L${sx + w},${y}"/>`;
+  }).join("")}
+<path d="M${sx - 26 * 0.3},${sy + 8 + 0.3 * (mb - sy - 8)} L${sx + 26 * 0.55},${sy + 8 + 0.55 * (mb - sy - 8)} L${sx - 26 * 0.8},${sy + 8 + 0.8 * (mb - sy - 8)}"/>
+<path d="M${sx - 40},${mb} L${sx + 40},${mb}"/>
+</g>`;
+  const waves = [14, 26, 38]
+    .map((r, i) => {
+      const a = (deg) => [sx + r * Math.cos((deg * Math.PI) / 180), sy + r * Math.sin((deg * Math.PI) / 180)].map((v) => v.toFixed(1));
+      const [x0, y0] = a(-50);
+      const [x1, y1] = a(50);
+      const [x2, y2] = a(130);
+      const [x3, y3] = a(230);
+      return `<path class="wave" style="animation-delay:${i * 0.35}s" d="M${x0},${y0} A${r} ${r} 0 0 1 ${x1},${y1} M${x2},${y2} A${r} ${r} 0 0 1 ${x3},${y3}" fill="none" stroke="${t.osd}" stroke-width="1.5"/>`;
+    })
+    .join("");
+
+  return screen(t, {
+    h,
+    title: "Deploy targets",
+    css: `.flow{animation:flow 1.6s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-48}}
+.wave{opacity:.15;animation:wave 1.4s ease-out infinite}
+@keyframes wave{0%{opacity:.9}100%{opacity:.1}}`,
+    body: `${playIcon(t, 34, 52)}
+<text x="56" y="52" font-size="28" class="osd" ${glowAttr(t)}>UPLINK</text>
+<text x="146" y="50" font-size="11" class="silk dim">DEPLOY TARGETS</text>
+<text x="${W - 34}" y="52" font-size="28" text-anchor="end" class="dim"><tspan class="osd">${targets.length}</tspan> TARGETS</text>
+${rows.map((r) => r.line).join("\n")}
+${mast}
+<g ${glowAttr(t)}>${waves}</g>
+<circle cx="${sx}" cy="${sy}" r="5" fill="${t.osd}" ${glowAttr(t)}/>
+<text x="${sx}" y="${mb + 26}" font-size="24" text-anchor="middle">${repoTotal} <tspan class="dim">REPOS</tspan></text>
+${rows.map((r) => r.row).join("\n")}`,
+  });
+}
+
 const SHORT = { "Objective-C": "Obj-C", "Jupyter Notebook": "Jupyter", "Vim Script": "Vim" };
 
 export function languagesCard(t, { entries, colors, repoCount, repoTotal }) {

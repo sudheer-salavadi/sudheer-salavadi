@@ -1,7 +1,7 @@
 // GH_TOKEN needs repo + read:org scopes
 
 import { mkdir, writeFile, readFile, rm } from "node:fs/promises";
-import { THEMES, heroCard, statsCard, timeCard, languagesCard } from "./cards.mjs";
+import { THEMES, heroCard, statsCard, timeCard, uplinkCard, languagesCard } from "./cards.mjs";
 
 const TOKEN = process.env.GH_TOKEN;
 if (!TOKEN) throw new Error("GH_TOKEN is required");
@@ -120,6 +120,66 @@ async function fetchCommitDates(repos) {
   return dates;
 }
 
+const TARGETS = [
+  { name: "Cloudflare", apps: [/cloudflare/], creators: [/cloudflare/i], files: [/(^|\/)wrangler\.(toml|jsonc?)$/] },
+  { name: "Vercel", apps: [/vercel/], creators: [/^vercel/i], files: [/(^|\/)vercel\.json$/] },
+  { name: "Netlify", apps: [/netlify/], creators: [/netlify/i], files: [/(^|\/)netlify\.toml$/] },
+  { name: "Firebase", files: [/(^|\/)firebase\.json$/, /(^|\/)apphosting\.yaml$/] },
+  { name: "GitHub Pages", creators: [/github-pages/], envs: [/github-pages/] },
+  { name: "Fly.io", files: [/(^|\/)fly\.toml$/] },
+  { name: "Kubernetes", files: [/(^|\/)(k8s|helm|charts)\//, /(^|\/)skaffold\.ya?ml$/] },
+  { name: "Docker", files: [/(^|\/)Dockerfile$/, /(^|\/)(docker-)?compose[^/]*\.ya?ml$/] },
+  { name: "iOS", files: [/\.xcodeproj\//, /(^|\/)eas\.json$/] },
+  { name: "Android", files: [/(^|\/)AndroidManifest\.xml$/, /(^|\/)eas\.json$/] },
+];
+
+async function rest(path) {
+  const res = await fetch(`https://api.github.com/${path}`, {
+    headers: { Authorization: `bearer ${TOKEN}`, Accept: "application/vnd.github+json" },
+  });
+  return res.ok ? res.json() : null;
+}
+
+async function fetchDeployTargets(repos) {
+  const counts = new Map();
+  for (const repo of repos) {
+    const [owner, name] = repo.nameWithOwner.split("/");
+    const { repository: r } = await gql(
+      `query($owner: String!, $name: String!) {
+        repository(owner: $owner, name: $name) {
+          deployments(last: 50) { nodes { environment creator { login } } }
+          defaultBranchRef { name target { ... on Commit { history(first: 30) { nodes {
+            statusCheckRollup { contexts(first: 20) { nodes {
+              ... on CheckRun { checkSuite { app { slug } } }
+              ... on StatusContext { creator { login } }
+            } } }
+          } } } } }
+        }
+      }`,
+      { owner, name },
+    );
+    if (!r.defaultBranchRef) continue;
+    const apps = new Set();
+    const creators = new Set(r.deployments.nodes.map((d) => d.creator?.login ?? ""));
+    const envs = new Set(r.deployments.nodes.map((d) => d.environment ?? ""));
+    for (const c of r.defaultBranchRef.target.history.nodes) {
+      for (const n of c.statusCheckRollup?.contexts.nodes ?? []) {
+        if (n.checkSuite?.app) apps.add(n.checkSuite.app.slug);
+        if (n.creator) creators.add(n.creator.login);
+      }
+    }
+    const tree = await rest(`repos/${owner}/${name}/git/trees/${r.defaultBranchRef.name}?recursive=1`);
+    const files = (tree?.tree ?? []).map((f) => f.path).filter((p) => !p.includes("node_modules/"));
+    const hit = (rules = [], values) => rules.some((re) => [...values].some((v) => re.test(v)));
+    for (const t of TARGETS) {
+      if (hit(t.apps, apps) || hit(t.creators, creators) || hit(t.envs, envs) || hit(t.files, files)) {
+        counts.set(t.name, (counts.get(t.name) ?? 0) + 1);
+      }
+    }
+  }
+  return [...counts.entries()].sort((a, b) => b[1] - a[1]);
+}
+
 // rows Mon..Sun, columns 0..23 in the configured timezone
 function bucketByHour(dates, timeZone) {
   const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -162,6 +222,7 @@ function topN(map, n) {
 const [repos, activity] = await Promise.all([fetchRepos(), fetchActivity()]);
 const { bytes, colors, repoCount } = aggregateLanguages(repos);
 const commitDates = await fetchCommitDates(repos);
+const targets = await fetchDeployTargets(repos);
 const now = new Date();
 
 const cards = {
@@ -180,6 +241,7 @@ const cards = {
       year: now.getUTCFullYear(),
     }),
   time: (t) => timeCard(t, { grid: bucketByHour(commitDates, config.timezone), timeZone: config.timezone }),
+  uplink: (t) => uplinkCard(t, { targets, repoTotal: repos.length }),
   languages: (t) =>
     languagesCard(t, { entries: topN(bytes, config.topLanguages), colors, repoCount, repoTotal: repos.length }),
 };
@@ -193,4 +255,5 @@ for (const [name, render] of Object.entries(cards)) {
 }
 
 console.log(`Repos counted: ${repos.length}, commits: ${commitDates.length}`);
+console.log("Deploy targets:", targets.map(([n, c]) => `${n} ${c}`).join(", "));
 console.log("Top languages:", topN(bytes, config.topLanguages).map(([n]) => n).join(", "));

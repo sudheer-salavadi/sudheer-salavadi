@@ -14,6 +14,11 @@
 </picture>
 
 <picture>
+  <source media="(prefers-color-scheme: dark)" srcset="generated/uplink-dark.svg" />
+  <img src="generated/uplink-light.svg" alt="Deploy targets" width="100%" />
+</picture>
+
+<picture>
   <source media="(prefers-color-scheme: dark)" srcset="generated/languages-dark.svg" />
   <img src="generated/languages-light.svg" alt="Most used languages" width="100%" />
 </picture>
