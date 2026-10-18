@@ -24,7 +24,7 @@ export const THEMES = {
 
 const W = 840;
 const BEZEL = 8;
-const SMPTE = ["#c0c0c0", "#c0c000", "#00c0c0", "#00c000", "#c000c0", "#c00000", "#0000c0"];
+const SMPTE = ["#c0c0c0", "#c0c000", "#00c0c0", "#00c000", "#e07000", "#c00000", "#0000c0"];
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 const fmt = (n) => (n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}K` : String(n));
