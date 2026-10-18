@@ -1,7 +1,7 @@
 // GH_TOKEN needs repo + read:org scopes
 
 import { mkdir, writeFile, readFile, rm } from "node:fs/promises";
-import { THEMES, heroCard, statsCard, languagesCard } from "./cards.mjs";
+import { THEMES, heroCard, statsCard, timeCard, languagesCard } from "./cards.mjs";
 
 const TOKEN = process.env.GH_TOKEN;
 if (!TOKEN) throw new Error("GH_TOKEN is required");
@@ -91,6 +91,47 @@ async function fetchActivity() {
   return { ...viewer, contributions, thisYear, weekly, lastYear: calendar.totalContributions };
 }
 
+async function fetchCommitDates(repos) {
+  const { viewer } = await gql(`{ viewer { id } }`);
+  const dates = [];
+  for (const repo of repos) {
+    const [owner, name] = repo.nameWithOwner.split("/");
+    let cursor = null;
+    do {
+      const { repository } = await gql(
+        `query($owner: String!, $name: String!, $author: ID!, $cursor: String) {
+          repository(owner: $owner, name: $name) {
+            defaultBranchRef { target { ... on Commit {
+              history(first: 100, after: $cursor, author: { id: $author }) {
+                pageInfo { hasNextPage endCursor }
+                nodes { authoredDate }
+              }
+            } } }
+          }
+        }`,
+        { owner, name, author: viewer.id, cursor },
+      );
+      const history = repository.defaultBranchRef?.target?.history;
+      if (!history) break;
+      dates.push(...history.nodes.map((n) => n.authoredDate));
+      cursor = history.pageInfo.hasNextPage ? history.pageInfo.endCursor : null;
+    } while (cursor);
+  }
+  return dates;
+}
+
+// rows Mon..Sun, columns 0..23 in the configured timezone
+function bucketByHour(dates, timeZone) {
+  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const f = new Intl.DateTimeFormat("en-US", { timeZone, weekday: "short", hour: "numeric", hourCycle: "h23" });
+  const grid = days.map(() => Array(24).fill(0));
+  for (const d of dates) {
+    const p = Object.fromEntries(f.formatToParts(new Date(d)).map((x) => [x.type, x.value]));
+    grid[days.indexOf(p.weekday)][Number(p.hour) % 24]++;
+  }
+  return grid;
+}
+
 function aggregateLanguages(repos) {
   const bytes = new Map();
   const colors = new Map();
@@ -120,6 +161,7 @@ function topN(map, n) {
 
 const [repos, activity] = await Promise.all([fetchRepos(), fetchActivity()]);
 const { bytes, colors, repoCount } = aggregateLanguages(repos);
+const commitDates = await fetchCommitDates(repos);
 const now = new Date();
 
 const cards = {
@@ -137,6 +179,7 @@ const cards = {
       since: new Date(activity.createdAt).getUTCFullYear(),
       year: now.getUTCFullYear(),
     }),
+  time: (t) => timeCard(t, { grid: bucketByHour(commitDates, config.timezone), timeZone: config.timezone }),
   languages: (t) =>
     languagesCard(t, { entries: topN(bytes, config.topLanguages), colors, repoCount, repoTotal: repos.length }),
 };
@@ -149,5 +192,5 @@ for (const [name, render] of Object.entries(cards)) {
   }
 }
 
-console.log(`Repos counted: ${repos.length}`);
+console.log(`Repos counted: ${repos.length}, commits: ${commitDates.length}`);
 console.log("Top languages:", topN(bytes, config.topLanguages).map(([n]) => n).join(", "));

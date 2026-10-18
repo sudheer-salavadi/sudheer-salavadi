@@ -230,6 +230,114 @@ ${metrics}
   });
 }
 
+const DAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+const hh = (h) => `${String(h).padStart(2, "0")}:00`;
+
+export function timeCard(t, { grid, timeZone }) {
+  const h = 360;
+  const hours = Array.from({ length: 24 }, (_, i) => grid.reduce((s, row) => s + row[i], 0));
+  const days = grid.map((row) => row.reduce((s, v) => s + v, 0));
+  const total = days.reduce((s, v) => s + v, 0) || 1;
+  const maxHour = Math.max(...hours, 1);
+  const maxCell = Math.max(...grid.flat(), 1);
+  const peakHour = hours.indexOf(Math.max(...hours));
+  const busiest = days.indexOf(Math.max(...days));
+  const after = grid.reduce(
+    (s, row, d) => s + row.reduce((a, v, hr) => a + (d >= 5 || hr < 9 || hr >= 18 ? v : 0), 0),
+    0,
+  );
+  const tz = new Intl.DateTimeFormat("en-US", { timeZone, timeZoneName: "short" })
+    .formatToParts(new Date())
+    .find((p) => p.type === "timeZoneName").value;
+
+  // radar: 00 at the top, clockwise
+  const cx = 176;
+  const cy = 206;
+  const R = 92;
+  const r0 = 16;
+  const pt = (r, deg) => {
+    const a = (deg * Math.PI) / 180;
+    return `${(cx + r * Math.sin(a)).toFixed(1)},${(cy - r * Math.cos(a)).toFixed(1)}`;
+  };
+  const sector = (ra, rb, d0, d1) =>
+    `M${pt(ra, d0)} L${pt(rb, d0)} A${rb} ${rb} 0 0 1 ${pt(rb, d1)} L${pt(ra, d1)} A${ra} ${ra} 0 0 0 ${pt(ra, d0)}Z`;
+  const wedges = hours
+    .map((v, i) => {
+      if (!v) return "";
+      const r = r0 + Math.sqrt(v / maxHour) * (R - r0);
+      return `<path d="${sector(r0, r, i * 15 - 5.5, i * 15 + 5.5)}" fill="${t.trace}" opacity="${i === peakHour ? 1 : 0.78}"/>`;
+    })
+    .join("");
+  const rings = [R / 3, (2 * R) / 3, R].map((r) => `<circle cx="${cx}" cy="${cy}" r="${r.toFixed(1)}" fill="none"/>`).join("");
+  const ticks = hours.map((_, i) => `<path d="M${pt(R + 2, i * 15)} L${pt(R + (i % 6 ? 6 : 10), i * 15)}"/>`).join("");
+  const dial = [0, 6, 12, 18]
+    .map((hr) => {
+      const [x, y] = pt(R + 22, hr * 15).split(",");
+      return `<text x="${x}" y="${Number(y) + 6}" font-size="18" text-anchor="middle" class="dim">${String(hr).padStart(2, "0")}</text>`;
+    })
+    .join("");
+  const sweep = [30, 18, 8]
+    .map((w, i) => `<path d="${sector(0, R, -w, 0)}" fill="${t.trace}" opacity="${[0.06, 0.08, 0.12][i]}"/>`)
+    .join("");
+
+  // day x hour grid
+  const gx = 352;
+  const gy = 104;
+  const pitch = 19;
+  const cell = 15;
+  const cells = grid
+    .flatMap((row, d) =>
+      row.map((v, hr) => {
+        const x = gx + hr * pitch;
+        const y = gy + d * pitch;
+        return v
+          ? `<rect x="${x}" y="${y}" width="${cell}" height="${cell}" rx="2" fill="${t.trace}" opacity="${(0.18 + 0.82 * Math.pow(v / maxCell, 0.6)).toFixed(2)}"/>`
+          : `<rect x="${x + 0.5}" y="${y + 0.5}" width="${cell - 1}" height="${cell - 1}" rx="2" fill="none" stroke="${t.grid}"/>`;
+      }),
+    )
+    .join("");
+  const rowLabels = DAYS.map(
+    (d, i) => `<text x="${gx - 10}" y="${gy + i * pitch + 11}" font-size="9" text-anchor="end" class="silk dim">${d}</text>`,
+  ).join("");
+  const colLabels = Array.from({ length: 8 }, (_, i) => i * 3)
+    .map((hr) => `<text x="${gx + hr * pitch}" y="${gy + 7 * pitch + 14}" font-size="16" class="dim">${String(hr).padStart(2, "0")}</text>`)
+    .join("");
+
+  const readouts = [
+    [hh(peakHour), "PEAK HOUR"],
+    [DAYS[busiest], "BUSIEST DAY"],
+    [`${Math.round((after / total) * 100)}%`, "AFTER HOURS"],
+  ]
+    .map(([value, label], i) => {
+      const x = gx + i * 152;
+      return `${chroma(t, value, { x, y: 300, size: 40, dx: 1.5, glow: true })}
+<text x="${x + 1}" y="320" font-size="10" class="silk dim">${label}</text>`;
+    })
+    .join("\n");
+
+  return screen(t, {
+    h,
+    title: "Commits by time of day",
+    css: `.sweep{transform-origin:${cx}px ${cy}px;animation:spin 6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}`,
+    body: `${playIcon(t, 34, 52)}
+<text x="56" y="52" font-size="28" class="osd" ${glowAttr(t)}>TIMECODE</text>
+<text x="168" y="50" font-size="11" class="silk dim">COMMITS BY HOUR · ${esc(tz)}</text>
+<text x="${W - 34}" y="52" font-size="28" text-anchor="end" class="dim"><tspan class="osd">${fmt(total)}</tspan> COMMITS</text>
+<g stroke="${t.grid}" stroke-width="1" stroke-dasharray="2 3">${rings}
+<line x1="${cx - R}" y1="${cy}" x2="${cx + R}" y2="${cy}"/><line x1="${cx}" y1="${cy - R}" x2="${cx}" y2="${cy + R}"/></g>
+<g stroke="${t.dim}" stroke-width="1">${ticks}</g>
+${dial}
+<g class="sweep">${sweep}<path d="M${cx},${cy} L${pt(R, 0)}" stroke="${t.trace}" stroke-width="1.5" opacity=".7"/></g>
+<g ${glowAttr(t)}>${wedges}</g>
+<circle cx="${cx}" cy="${cy}" r="3" fill="${t.fg}"/>
+${rowLabels}
+<g ${glowAttr(t)}>${cells}</g>
+${colLabels}
+${readouts}`,
+  });
+}
+
 const SHORT = { "Objective-C": "Obj-C", "Jupyter Notebook": "Jupyter", "Vim Script": "Vim" };
 
 export function languagesCard(t, { entries, colors, repoCount, repoTotal }) {

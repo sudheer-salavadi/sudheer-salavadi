@@ -9,6 +9,11 @@
 </picture>
 
 <picture>
+  <source media="(prefers-color-scheme: dark)" srcset="generated/time-dark.svg" />
+  <img src="generated/time-light.svg" alt="Commits by time of day" width="100%" />
+</picture>
+
+<picture>
   <source media="(prefers-color-scheme: dark)" srcset="generated/languages-dark.svg" />
   <img src="generated/languages-light.svg" alt="Most used languages" width="100%" />
 </picture>

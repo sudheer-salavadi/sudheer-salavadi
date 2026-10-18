@@ -3,6 +3,7 @@
     "name": "SUDHEER SALAVADI",
     "tagline": "PRODUCT GENERALIST"
   },
+  "timezone": "America/New_York",
   "topLanguages": 8,
   "excludeRepos": ["sudheer-salavadi/aqi"],
   "excludeLanguages": ["Dockerfile", "Makefile", "Mako", "Bru", "Go Template", "Meson", "PowerShell"]
