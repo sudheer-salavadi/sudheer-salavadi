@@ -50,7 +50,7 @@ text{font-family:VT,ui-monospace,Menlo,monospace;fill:#16151a}
 <rect class="eq" style="animation-duration:1.84s;animation-delay:-0.58s" x="252.1" y="123.0" width="50.4" height="139.0" fill="#F05138"/>
 <rect class="eq" style="animation-duration:2.21s;animation-delay:-0.87s" x="333.5" y="153.4" width="50.4" height="108.6" fill="#A97BFF"/>
 <rect class="eq" style="animation-duration:1.10s;animation-delay:-1.16s" x="414.8" y="208.7" width="50.4" height="53.3" fill="#3572A5"/>
-<rect class="eq" style="animation-duration:1.47s;animation-delay:-1.45s" x="496.1" y="216.1" width="50.4" height="45.9" fill="#f1e05a"/>
+<rect class="eq" style="animation-duration:1.47s;animation-delay:-1.45s" x="496.1" y="215.0" width="50.4" height="47.0" fill="#f1e05a"/>
 <rect class="eq" style="animation-duration:1.84s;animation-delay:-1.74s" x="577.5" y="222.4" width="50.4" height="39.6" fill="#438eff"/>
 <rect class="eq" style="animation-duration:2.21s;animation-delay:-2.03s" x="658.8" y="231.6" width="50.4" height="30.4" fill="#e34c26"/>
 <rect class="eq" style="animation-duration:1.10s;animation-delay:-2.32s" x="740.1" y="232.5" width="50.4" height="29.5" fill="#b3aa98"/></g></g>
@@ -64,8 +64,8 @@ text{font-family:VT,ui-monospace,Menlo,monospace;fill:#16151a}
 <text x="358.66666666666663" y="139.4" font-size="20" text-anchor="middle">12.9<tspan class="dim">%</tspan></text>
 <rect x="414.8" y="201.7" width="50.4" height="2" fill="#16151a" opacity=".85"/>
 <text x="440" y="194.7" font-size="20" text-anchor="middle">3.1<tspan class="dim">%</tspan></text>
-<rect x="496.1" y="209.1" width="50.4" height="2" fill="#16151a" opacity=".85"/>
-<text x="521.3333333333333" y="202.1" font-size="20" text-anchor="middle">2.3<tspan class="dim">%</tspan></text>
+<rect x="496.1" y="208.0" width="50.4" height="2" fill="#16151a" opacity=".85"/>
+<text x="521.3333333333333" y="201.0" font-size="20" text-anchor="middle">2.4<tspan class="dim">%</tspan></text>
 <rect x="577.5" y="215.4" width="50.4" height="2" fill="#16151a" opacity=".85"/>
 <text x="602.6666666666666" y="208.4" font-size="20" text-anchor="middle">1.7<tspan class="dim">%</tspan></text>
 <rect x="658.8" y="224.6" width="50.4" height="2" fill="#16151a" opacity=".85"/>
@@ -84,7 +84,7 @@ text{font-family:VT,ui-monospace,Menlo,monospace;fill:#16151a}
 <text x="440" y="288" font-size="20" text-anchor="middle">Python</text>
 <text x="440" y="306" font-size="9" text-anchor="middle" class="silk dim">—</text>
 <text x="521.3333333333333" y="288" font-size="20" text-anchor="middle">JavaScript</text>
-<text x="521.3333333333333" y="306" font-size="9" text-anchor="middle" class="silk dim">2 REPOS</text>
+<text x="521.3333333333333" y="306" font-size="9" text-anchor="middle" class="silk dim">3 REPOS</text>
 <text x="602.6666666666666" y="288" font-size="20" text-anchor="middle">Obj-C</text>
 <text x="602.6666666666666" y="306" font-size="9" text-anchor="middle" class="silk dim">1 REPO</text>
 <text x="684" y="288" font-size="20" text-anchor="middle">HTML</text>
