@@ -55,7 +55,6 @@ async function fetchActivity() {
   const { viewer } = await gql(`{
     viewer {
       login createdAt
-      pullRequests { totalCount }
       issues { totalCount }
       repositoriesContributedTo(contributionTypes: [COMMIT, PULL_REQUEST, REPOSITORY]) { totalCount }
       contributionsCollection {
@@ -233,7 +232,6 @@ const cards = {
       thisYear: activity.thisYear,
       lastYear: activity.lastYear,
       weekly: activity.weekly,
-      pullRequests: activity.pullRequests.totalCount,
       contributedTo: activity.repositoriesContributedTo.totalCount,
       repoTotal: repos.length,
       languageCount: bytes.size,

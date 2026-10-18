@@ -179,7 +179,6 @@ export function statsCard(t, s) {
   const items = [
     ["Contributions", fmt(s.contributions)],
     [`In ${s.year}`, fmt(s.thisYear)],
-    ["Pull requests", fmt(s.pullRequests)],
     ["Repositories", fmt(s.repoTotal)],
     ["Contributed to", fmt(s.contributedTo)],
     ["Languages", fmt(s.languageCount)],
