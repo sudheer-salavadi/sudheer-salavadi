@@ -316,7 +316,7 @@ export function timeCard(t, { grid, timeZone }) {
     css: `.sweep{transform-origin:${cx}px ${cy}px;animation:spin 6s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}`,
     body: `${playIcon(t, 34, 52)}
-<text x="56" y="52" font-size="28" class="osd" ${glowAttr(t)}>COMMIT HOURS</text>
+<text x="56" y="52" font-size="28" class="osd" ${glowAttr(t)}>COMMITS BY TIME OF DAY</text>
 <text x="${W - 34}" y="52" font-size="28" text-anchor="end" class="dim"><tspan class="osd">${fmt(total)}</tspan> COMMITS · ${esc(tz)}</text>
 <g stroke="${t.grid}" stroke-width="1" stroke-dasharray="2 3">${rings}
 <line x1="${cx - R}" y1="${cy}" x2="${cx + R}" y2="${cy}"/><line x1="${cx}" y1="${cy - R}" x2="${cx}" y2="${cy + R}"/></g>
