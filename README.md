@@ -1,21 +1,16 @@
-<table align="center">
-  <tr>
-     <td>
-       <img src="http://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=sudheer-salavadi&theme=dark" alt="Profile Details" />
-      </td>
-  </tr>
-</table>
-<table align="center">
-  <tr>
-    <td>
-      <img src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=sudheer-salavadi&theme=dark&exclude=mdx" alt="Repos Per Language" />
-    </td>
-    <td>
-      <img src="http://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=sudheer-salavadi&theme=dark&utcOffset=-4" alt="Productive Time" />
-    </td>
-  </tr>
-</table>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="generated/hero-dark.svg" />
+  <img src="generated/hero-light.svg" alt="Sudheer Salavadi" width="100%" />
+</picture>
 
----
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="generated/stats-dark.svg" />
+  <img src="generated/stats-light.svg" alt="GitHub activity" width="100%" />
+</picture>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="generated/languages-dark.svg" />
+  <img src="generated/languages-light.svg" alt="Most used languages" width="100%" />
+</picture>
 
 - 📷 [Unsplash](https://unsplash.com/@sudheersalavadi)

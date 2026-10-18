@@ -1,0 +1,9 @@
+{
+  "hero": {
+    "name": "SUDHEER SALAVADI",
+    "tagline": "DESIGNER · DEVELOPER · PHOTOGRAPHER"
+  },
+  "topLanguages": 8,
+  "excludeRepos": ["sudheer-salavadi/aqi"],
+  "excludeLanguages": ["Dockerfile", "Makefile", "Mako", "Bru", "Go Template", "Meson", "PowerShell"]
+}

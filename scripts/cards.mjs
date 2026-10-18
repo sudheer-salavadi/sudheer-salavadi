@@ -1,0 +1,287 @@
+import { readFileSync } from "node:fs";
+import { deflateSync, crc32 } from "node:zlib";
+
+const font = (name) => readFileSync(new URL(`./fonts/${name}.woff2`, import.meta.url)).toString("base64");
+const VT323 = font("VT323");
+const SILK = font("Silkscreen");
+
+export const THEMES = {
+  dark: {
+    bg: "#05070b", fg: "#eaf2ff", dim: "#8190a6", osd: "#3dff9a", rec: "#ff3b3b",
+    c1: "#ff2bd6", c2: "#00e5ff", blend: "screen", glow: 2.2,
+    scan: "rgba(0,0,0,0.5)", noise: 0.07, vig: "#000", vigA: 0.85,
+    roll: "#cfe6ff", rollA: 0.07, bez1: "#1b1e23", bez2: "#0a0b0e", rim: "rgba(255,255,255,0.07)",
+    grid: "#1a2433", trace: "#3dff9a", other: "#4a5568",
+  },
+  light: {
+    bg: "#f2ecdf", fg: "#16151a", dim: "#8a8170", osd: "#d10f2f", rec: "#d10f2f",
+    c1: "#ff2a4d", c2: "#1f5bff", blend: "multiply", glow: 0,
+    scan: "rgba(70,50,20,0.11)", noise: 0.1, vig: "#5c4a2c", vigA: 0.3,
+    roll: "#3a2a10", rollA: 0.06, bez1: "#e4dccb", bez2: "#cdc3ad", rim: "rgba(0,0,0,0.09)",
+    grid: "#dcd2bd", trace: "#d10f2f", other: "#b3aa98",
+  },
+};
+
+const W = 840;
+const BEZEL = 8;
+const SMPTE = ["#c0c0c0", "#c0c000", "#00c0c0", "#00c000", "#c000c0", "#c00000", "#0000c0"];
+
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+const fmt = (n) => (n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}K` : String(n));
+const glowAttr = (t) => (t.glow ? `filter="url(#glow)"` : "");
+
+// fixed seed keeps output stable between runs
+function noisePng(size) {
+  let seed = 1337;
+  const rnd = () => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff) * 255;
+  const raw = Buffer.alloc((size * 2 + 1) * size);
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      const o = y * (size * 2 + 1) + 1 + x * 2;
+      raw[o] = rnd();
+      raw[o + 1] = rnd();
+    }
+  }
+  const chunk = (type, data) => {
+    const len = Buffer.alloc(4);
+    len.writeUInt32BE(data.length);
+    const body = Buffer.concat([Buffer.from(type), data]);
+    const crc = Buffer.alloc(4);
+    crc.writeUInt32BE(crc32(body));
+    return Buffer.concat([len, body, crc]);
+  };
+  const ihdr = Buffer.alloc(13);
+  ihdr.writeUInt32BE(size, 0);
+  ihdr.writeUInt32BE(size, 4);
+  ihdr.set([8, 4, 0, 0, 0], 8); // 8-bit grayscale + alpha
+  return Buffer.concat([
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+    chunk("IHDR", ihdr),
+    chunk("IDAT", deflateSync(raw)),
+    chunk("IEND", Buffer.alloc(0)),
+  ]).toString("base64");
+}
+const NOISE = noisePng(96);
+
+function chroma(t, content, { x, y, size, cls = "", dx = 2, anchor = "start", glow = false }) {
+  const a = `x="${x}" y="${y}" font-size="${size}" text-anchor="${anchor}"`;
+  return `<g>
+  <text ${a} class="${cls} ch c1" transform="translate(${-dx} 0)">${content}</text>
+  <text ${a} class="${cls} ch c2" transform="translate(${dx} 0)">${content}</text>
+  <text ${a} class="${cls}" ${glow ? glowAttr(t) : ""}>${content}</text>
+</g>`;
+}
+
+function playIcon(t, x, y) {
+  return `<polygon points="${x},${y - 14} ${x + 13},${y - 7} ${x},${y}" fill="${t.osd}" ${glowAttr(t)}/>`;
+}
+
+function screen(t, { h, title, body, defs = "", css = "" }) {
+  const s = BEZEL;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${h}" viewBox="0 0 ${W} ${h}" role="img" aria-label="${esc(title)}">
+<title>${esc(title)}</title>
+<defs>
+<style>
+@font-face{font-family:VT;src:url(data:font/woff2;base64,${VT323}) format("woff2")}
+@font-face{font-family:Silk;src:url(data:font/woff2;base64,${SILK}) format("woff2")}
+text{font-family:VT,ui-monospace,Menlo,monospace;fill:${t.fg}}
+.silk{font-family:Silk,ui-monospace,monospace;letter-spacing:.12em}
+.dim{fill:${t.dim}}
+.osd{fill:${t.osd}}
+.ch{mix-blend-mode:${t.blend}}
+.c1{fill:${t.c1}}
+.c2{fill:${t.c2}}
+.roll{animation:roll 8s linear infinite}
+@keyframes roll{from{transform:translateY(-120px)}to{transform:translateY(${h + 40}px)}}
+.blink{animation:blink 1.4s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.flicker{animation:flicker 6s infinite}
+@keyframes flicker{0%,40%,44%,76%,100%{opacity:1}42%{opacity:.84}78%{opacity:.92}}
+${css}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+<clipPath id="scr"><rect x="${s}" y="${s}" width="${W - 2 * s}" height="${h - 2 * s}" rx="14"/></clipPath>
+<pattern id="scan" width="4" height="3" patternUnits="userSpaceOnUse"><rect width="4" height="1" fill="${t.scan}"/></pattern>
+<pattern id="noise" width="96" height="96" patternUnits="userSpaceOnUse"><image width="96" height="96" href="data:image/png;base64,${NOISE}"/></pattern>
+<radialGradient id="vig" cx="50%" cy="50%" r="72%"><stop offset="50%" stop-color="${t.vig}" stop-opacity="0"/><stop offset="100%" stop-color="${t.vig}" stop-opacity="${t.vigA}"/></radialGradient>
+<linearGradient id="rollg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${t.roll}" stop-opacity="0"/><stop offset=".6" stop-color="${t.roll}" stop-opacity="${t.rollA}"/><stop offset="1" stop-color="${t.roll}" stop-opacity="0"/></linearGradient>
+<linearGradient id="bez" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${t.bez1}"/><stop offset="1" stop-color="${t.bez2}"/></linearGradient>
+<filter id="glow" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="${t.glow}" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+${defs}
+</defs>
+<rect width="${W}" height="${h}" rx="22" fill="url(#bez)"/>
+<g clip-path="url(#scr)">
+<rect width="${W}" height="${h}" fill="${t.bg}"/>
+<g class="flicker">
+${body}
+</g>
+<rect width="${W}" height="${h}" fill="url(#noise)" opacity="${t.noise}"/>
+<rect width="${W}" height="${h}" fill="url(#scan)"/>
+<rect class="roll" width="${W}" height="100" fill="url(#rollg)"/>
+<rect width="${W}" height="${h}" fill="url(#vig)"/>
+</g>
+<rect x="${s + 0.5}" y="${s + 0.5}" width="${W - 2 * s - 1}" height="${h - 2 * s - 1}" rx="14" fill="none" stroke="${t.rim}"/>
+</svg>
+`;
+}
+
+export function heroCard(t, { name, tagline, date }) {
+  const h = 250;
+  const cx = W / 2;
+  const nameY = 146;
+  const nameText = esc(name);
+  const mon = date.toLocaleString("en-US", { month: "short", timeZone: "UTC" }).toUpperCase();
+  const stamp = `${mon}.${String(date.getUTCDate()).padStart(2, "0")} ${date.getUTCFullYear()}`;
+  const barW = (W - 2 * BEZEL) / SMPTE.length;
+
+  const slice = (id, cls, y0, y1) => `<g clip-path="url(#${id})"><g class="${cls}">
+  <rect x="-60" y="${y0}" width="${W + 120}" height="${y1 - y0}" fill="${t.bg}"/>
+  <text x="${cx}" y="${nameY}" font-size="96" text-anchor="middle" class="c2">${nameText}</text>
+</g></g>`;
+
+  return screen(t, {
+    h,
+    title: name,
+    defs: `<clipPath id="sa"><rect x="0" y="92" width="${W}" height="14"/></clipPath>
+<clipPath id="sb"><rect x="0" y="118" width="${W}" height="9"/></clipPath>`,
+    css: `.ga{opacity:0;animation:tear 4.6s steps(1) infinite}
+.gb{opacity:0;animation:tear 4.6s steps(1) .12s infinite reverse}
+@keyframes tear{0%,86%,100%{opacity:0;transform:none}87%{opacity:1;transform:translateX(-22px)}89%{opacity:1;transform:translateX(14px)}91%{opacity:1;transform:translateX(-6px)}93%{opacity:0}}`,
+    body: `${playIcon(t, 34, 52)}
+<text x="56" y="52" font-size="28" class="osd" ${glowAttr(t)}>PLAY</text>
+<text x="118" y="52" font-size="28" class="dim">SP</text>
+<text x="${W - 34}" y="52" font-size="28" text-anchor="end" class="osd" ${glowAttr(t)}>CH 03</text>
+${chroma(t, nameText, { x: cx, y: nameY, size: 96, anchor: "middle", dx: 3, glow: true })}
+${slice("sa", "ga", 92, 106)}
+${slice("sb", "gb", 118, 127)}
+<text x="${cx}" y="186" font-size="12" text-anchor="middle" class="silk dim" style="letter-spacing:.42em">${esc(tagline)}</text>
+<text x="34" y="218" font-size="24" class="osd" ${glowAttr(t)}>${stamp}</text>
+<text x="${W - 34}" y="218" font-size="24" text-anchor="end" class="dim">TRACKING <tspan class="osd">▮▮▮▮▮▯▯</tspan></text>
+${SMPTE.map((c, i) => `<rect x="${(BEZEL + i * barW).toFixed(2)}" y="${h - BEZEL - 6}" width="${(barW + 0.5).toFixed(2)}" height="6" fill="${c}"/>`).join("")}`,
+  });
+}
+
+// catmull-rom -> cubic bezier
+function smoothPath(pts) {
+  let d = `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] ?? pts[i];
+    const [p1, p2] = [pts[i], pts[i + 1]];
+    const p3 = pts[i + 2] ?? p2;
+    const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6];
+    const c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+    d += ` C${c1.map((v) => v.toFixed(1))} ${c2.map((v) => v.toFixed(1))} ${p2.map((v) => v.toFixed(1))}`;
+  }
+  return d;
+}
+
+export function statsCard(t, s) {
+  const h = 326;
+  const left = 34;
+  const right = W - 34;
+  const items = [
+    ["Contributions", fmt(s.contributions)],
+    [`In ${s.year}`, fmt(s.thisYear)],
+    ["Pull requests", fmt(s.pullRequests)],
+    ["Repositories", fmt(s.repoTotal)],
+    ["Contributed to", fmt(s.contributedTo)],
+    ["Languages", fmt(s.languageCount)],
+  ];
+  const colW = (right - left) / items.length;
+  const metrics = items
+    .map(([label, value], i) => {
+      const x = left + i * colW;
+      return `${chroma(t, esc(value), { x, y: 116, size: 58, dx: 1.5, glow: true })}
+<text x="${x + 1}" y="142" font-size="10" class="silk dim">${esc(label.toUpperCase())}</text>`;
+    })
+    .join("\n");
+
+  const top = 182;
+  const bottom = h - 34;
+  const max = Math.max(...s.weekly, 1);
+  const pts = s.weekly.map((v, i) => [
+    left + (i / (s.weekly.length - 1)) * (right - left),
+    bottom - 10 - (v / max) * (bottom - top - 40),
+  ]);
+  const d = smoothPath(pts);
+  const vLines = Array.from({ length: 13 }, (_, i) => left + (i * (right - left)) / 12);
+  const hLines = Array.from({ length: 5 }, (_, i) => top + (i * (bottom - top)) / 4);
+  const grid = [
+    ...vLines.map((x) => `<line x1="${x}" y1="${top}" x2="${x}" y2="${bottom}"/>`),
+    ...hLines.map((y) => `<line x1="${left}" y1="${y}" x2="${right}" y2="${y}"/>`),
+  ].join("");
+
+  return screen(t, {
+    h,
+    title: "GitHub activity",
+    css: `.beam{offset-path:path("${d}");offset-rotate:0deg;animation:sweep 7s linear infinite}
+@keyframes sweep{from{offset-distance:0%}to{offset-distance:100%}}`,
+    body: `<circle cx="40" cy="45" r="6" fill="${t.rec}" class="blink" ${glowAttr(t)}/>
+<text x="54" y="52" font-size="28" fill="${t.rec}">REC</text>
+<text x="106" y="50" font-size="11" class="silk dim">SIGNAL STATUS · PUBLIC + PRIVATE</text>
+<text x="${right}" y="52" font-size="28" text-anchor="end" class="dim">${s.since} <tspan class="osd">▸</tspan> ${s.year}</text>
+${metrics}
+<g stroke="${t.grid}" stroke-width="1" stroke-dasharray="2 3">${grid}</g>
+<text x="${left + 8}" y="${top + 18}" font-size="10" class="silk osd">CH1 · 52 WK · ${fmt(s.lastYear)} EVENTS</text>
+<text x="${right - 8}" y="${top + 18}" font-size="10" text-anchor="end" class="silk dim">PEAK ${max}/WK</text>
+<path d="${d}" fill="none" stroke="${t.c2}" stroke-width="2" opacity=".35" class="ch" transform="translate(0 3)"/>
+<path d="${d}" fill="none" stroke="${t.trace}" stroke-width="2" stroke-linejoin="round" ${glowAttr(t)}/>
+<circle r="4" fill="${t.fg}" class="beam" ${glowAttr(t)}/>`,
+  });
+}
+
+const SHORT = { "Objective-C": "Obj-C", "Jupyter Notebook": "Jupyter", "Vim Script": "Vim" };
+
+export function languagesCard(t, { entries, colors, repoCount, repoTotal }) {
+  const h = 356;
+  const left = 74;
+  const right = W - 34;
+  const top = 92;
+  const base = 262;
+  const H = base - top;
+  const total = entries.reduce((sum, [, v]) => sum + v, 0);
+  const max = entries[0][1];
+  const colW = (right - left) / entries.length;
+  const barW = Math.min(52, colW * 0.62);
+
+  const scale = [0, 6, 12, 18, 24]
+    .map((db, i) => {
+      const y = top + (i * H) / 4;
+      return `<line x1="${left - 6}" y1="${y}" x2="${right}" y2="${y}"/>
+<text x="${left - 12}" y="${y + 5}" font-size="17" text-anchor="end" class="dim" stroke="none">-${db}</text>`;
+    })
+    .join("");
+
+  const cols = entries.map(([name, v], i) => {
+    const cx = left + colW * (i + 0.5);
+    const bh = Math.max(10, Math.sqrt(v / max) * H);
+    const color = name === "Other" ? t.other : colors.get(name) ?? t.other;
+    const pct = ((v / total) * 100).toFixed(1);
+    const repos = repoCount.get(name);
+    return {
+      bar: `<rect class="eq" style="animation-duration:${(1.1 + (i % 4) * 0.37).toFixed(2)}s;animation-delay:-${(i * 0.29).toFixed(2)}s" x="${(cx - barW / 2).toFixed(1)}" y="${(base - bh).toFixed(1)}" width="${barW.toFixed(1)}" height="${bh.toFixed(1)}" fill="${color}"/>`,
+      cap: `<rect x="${(cx - barW / 2).toFixed(1)}" y="${(base - bh - 7).toFixed(1)}" width="${barW.toFixed(1)}" height="2" fill="${t.fg}" opacity=".85"/>
+<text x="${cx}" y="${(base - bh - 14).toFixed(1)}" font-size="20" text-anchor="middle">${pct}<tspan class="dim">%</tspan></text>`,
+      label: `<text x="${cx}" y="${base + 26}" font-size="20" text-anchor="middle">${esc(SHORT[name] ?? name)}</text>
+<text x="${cx}" y="${base + 44}" font-size="9" text-anchor="middle" class="silk dim">${repos ? `${repos} REPO${repos > 1 ? "S" : ""}` : "—"}</text>`,
+    };
+  });
+
+  return screen(t, {
+    h,
+    title: "Most used languages",
+    defs: `<pattern id="segp" width="8" height="7" y="${base}" patternUnits="userSpaceOnUse"><rect width="8" height="5" fill="#fff"/></pattern>
+<mask id="seg"><rect x="0" y="${top - 40}" width="${W}" height="${H + 40}" fill="url(#segp)"/></mask>`,
+    css: `.eq{transform-box:fill-box;transform-origin:50% 100%;animation:eq 1.4s ease-in-out infinite alternate}
+@keyframes eq{from{transform:scaleY(1)}to{transform:scaleY(.82)}}`,
+    body: `${playIcon(t, 34, 52)}
+<text x="56" y="52" font-size="28" class="osd" ${glowAttr(t)}>SPECTRUM</text>
+<text x="168" y="50" font-size="11" class="silk dim">LANGUAGES BY VOLUME</text>
+<text x="${right}" y="52" font-size="28" text-anchor="end" class="dim">INPUT <tspan class="osd">${repoTotal}</tspan> REPOS</text>
+<g stroke="${t.grid}" stroke-width="1" stroke-dasharray="2 3">${scale}</g>
+<g ${glowAttr(t)}><g mask="url(#seg)">${cols.map((c) => c.bar).join("\n")}</g></g>
+${cols.map((c) => c.cap).join("\n")}
+<line x1="${left - 6}" y1="${base + 0.5}" x2="${right}" y2="${base + 0.5}" stroke="${t.dim}"/>
+${cols.map((c) => c.label).join("\n")}`,
+  });
+}
