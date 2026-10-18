@@ -124,9 +124,9 @@ ${body}
 }
 
 export function heroCard(t, { name, tagline, date }) {
-  const h = 250;
+  const h = 236;
   const cx = W / 2;
-  const nameY = 146;
+  const nameY = 114;
   const nameText = esc(name);
   const mon = date.toLocaleString("en-US", { month: "short", timeZone: "UTC" }).toUpperCase();
   const stamp = `${mon}.${String(date.getUTCDate()).padStart(2, "0")} ${date.getUTCFullYear()}`;
@@ -140,20 +140,16 @@ export function heroCard(t, { name, tagline, date }) {
   return screen(t, {
     h,
     title: name,
-    defs: `<clipPath id="sa"><rect x="0" y="92" width="${W}" height="14"/></clipPath>
-<clipPath id="sb"><rect x="0" y="118" width="${W}" height="9"/></clipPath>`,
+    defs: `<clipPath id="sa"><rect x="0" y="${nameY - 54}" width="${W}" height="14"/></clipPath>
+<clipPath id="sb"><rect x="0" y="${nameY - 28}" width="${W}" height="9"/></clipPath>`,
     css: `.ga{opacity:0;animation:tear 4.6s steps(1) infinite}
 .gb{opacity:0;animation:tear 4.6s steps(1) .12s infinite reverse}
 @keyframes tear{0%,86%,100%{opacity:0;transform:none}87%{opacity:1;transform:translateX(-22px)}89%{opacity:1;transform:translateX(14px)}91%{opacity:1;transform:translateX(-6px)}93%{opacity:0}}`,
-    body: `${playIcon(t, 34, 52)}
-<text x="56" y="52" font-size="28" class="osd" ${glowAttr(t)}>PLAY</text>
-<text x="${W - 34}" y="52" font-size="28" text-anchor="end" class="osd" ${glowAttr(t)}>CH 03</text>
-${chroma(t, nameText, { x: cx, y: nameY, size: 96, anchor: "middle", dx: 3, glow: true })}
-${slice("sa", "ga", 92, 106)}
-${slice("sb", "gb", 118, 127)}
-<text x="${cx}" y="186" font-size="12" text-anchor="middle" class="silk dim" style="letter-spacing:.42em">${esc(tagline)}</text>
-<text x="34" y="218" font-size="24" class="osd" ${glowAttr(t)}>${stamp}</text>
-<text x="${W - 34}" y="218" font-size="24" text-anchor="end" class="dim">TRACKING <tspan class="osd">▮▮▮▮▮▯▯</tspan></text>
+    body: `${chroma(t, nameText, { x: cx, y: nameY, size: 96, anchor: "middle", dx: 3, glow: true })}
+${slice("sa", "ga", nameY - 54, nameY - 40)}
+${slice("sb", "gb", nameY - 28, nameY - 19)}
+<text x="${cx}" y="${nameY + 40}" font-size="12" text-anchor="middle" class="silk dim" style="letter-spacing:.42em">${esc(tagline)}</text>
+<text x="${cx}" y="${nameY + 76}" font-size="24" text-anchor="middle" class="osd" ${glowAttr(t)}>${stamp}</text>
 ${SMPTE.map((c, i) => `<rect x="${(BEZEL + i * barW).toFixed(2)}" y="${h - BEZEL - 6}" width="${(barW + 0.5).toFixed(2)}" height="6" fill="${c}"/>`).join("")}`,
   });
 }
