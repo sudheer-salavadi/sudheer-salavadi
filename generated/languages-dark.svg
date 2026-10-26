@@ -43,26 +43,26 @@ text{font-family:VT,ui-monospace,Menlo,monospace;fill:#eaf2ff}
 <text x="62" y="224.5" font-size="17" text-anchor="end" class="dim" stroke="none">-18</text><line x1="68" y1="262" x2="806" y2="262"/>
 <text x="62" y="267" font-size="17" text-anchor="end" class="dim" stroke="none">-24</text></g>
 <g filter="url(#glow)"><g mask="url(#seg)"><rect class="eq" style="animation-duration:1.10s;animation-delay:-0.00s" x="89.5" y="92.0" width="50.4" height="170.0" fill="#3178c6"/>
-<rect class="eq" style="animation-duration:1.47s;animation-delay:-0.29s" x="170.8" y="111.6" width="50.4" height="150.4" fill="#00ADD8"/>
-<rect class="eq" style="animation-duration:1.84s;animation-delay:-0.58s" x="252.1" y="125.0" width="50.4" height="137.0" fill="#F05138"/>
-<rect class="eq" style="animation-duration:2.21s;animation-delay:-0.87s" x="333.5" y="154.4" width="50.4" height="107.6" fill="#A97BFF"/>
+<rect class="eq" style="animation-duration:1.47s;animation-delay:-0.29s" x="170.8" y="111.4" width="50.4" height="150.6" fill="#00ADD8"/>
+<rect class="eq" style="animation-duration:1.84s;animation-delay:-0.58s" x="252.1" y="124.8" width="50.4" height="137.2" fill="#F05138"/>
+<rect class="eq" style="animation-duration:2.21s;animation-delay:-0.87s" x="333.5" y="154.3" width="50.4" height="107.7" fill="#A97BFF"/>
 <rect class="eq" style="animation-duration:1.10s;animation-delay:-1.16s" x="414.8" y="209.4" width="50.4" height="52.6" fill="#3572A5"/>
-<rect class="eq" style="animation-duration:1.47s;animation-delay:-1.45s" x="496.1" y="213.1" width="50.4" height="48.9" fill="#f1e05a"/>
+<rect class="eq" style="animation-duration:1.47s;animation-delay:-1.45s" x="496.1" y="212.8" width="50.4" height="49.2" fill="#f1e05a"/>
 <rect class="eq" style="animation-duration:1.84s;animation-delay:-1.74s" x="577.5" y="222.9" width="50.4" height="39.1" fill="#438eff"/>
 <rect class="eq" style="animation-duration:2.21s;animation-delay:-2.03s" x="658.8" y="232.1" width="50.4" height="29.9" fill="#e34c26"/>
 <rect class="eq" style="animation-duration:1.10s;animation-delay:-2.32s" x="740.1" y="232.1" width="50.4" height="29.9" fill="#4a5568"/></g></g>
 <rect x="89.5" y="85.0" width="50.4" height="2" fill="#eaf2ff" opacity=".85"/>
-<text x="114.66666666666666" y="78.0" font-size="20" text-anchor="middle">32.0<tspan class="dim">%</tspan></text>
-<rect x="170.8" y="104.6" width="50.4" height="2" fill="#eaf2ff" opacity=".85"/>
-<text x="196" y="97.6" font-size="20" text-anchor="middle">25.0<tspan class="dim">%</tspan></text>
-<rect x="252.1" y="118.0" width="50.4" height="2" fill="#eaf2ff" opacity=".85"/>
-<text x="277.3333333333333" y="111.0" font-size="20" text-anchor="middle">20.8<tspan class="dim">%</tspan></text>
-<rect x="333.5" y="147.4" width="50.4" height="2" fill="#eaf2ff" opacity=".85"/>
-<text x="358.66666666666663" y="140.4" font-size="20" text-anchor="middle">12.8<tspan class="dim">%</tspan></text>
+<text x="114.66666666666666" y="78.0" font-size="20" text-anchor="middle">31.9<tspan class="dim">%</tspan></text>
+<rect x="170.8" y="104.4" width="50.4" height="2" fill="#eaf2ff" opacity=".85"/>
+<text x="196" y="97.4" font-size="20" text-anchor="middle">25.1<tspan class="dim">%</tspan></text>
+<rect x="252.1" y="117.8" width="50.4" height="2" fill="#eaf2ff" opacity=".85"/>
+<text x="277.3333333333333" y="110.8" font-size="20" text-anchor="middle">20.8<tspan class="dim">%</tspan></text>
+<rect x="333.5" y="147.3" width="50.4" height="2" fill="#eaf2ff" opacity=".85"/>
+<text x="358.66666666666663" y="140.3" font-size="20" text-anchor="middle">12.8<tspan class="dim">%</tspan></text>
 <rect x="414.8" y="202.4" width="50.4" height="2" fill="#eaf2ff" opacity=".85"/>
 <text x="440" y="195.4" font-size="20" text-anchor="middle">3.1<tspan class="dim">%</tspan></text>
-<rect x="496.1" y="206.1" width="50.4" height="2" fill="#eaf2ff" opacity=".85"/>
-<text x="521.3333333333333" y="199.1" font-size="20" text-anchor="middle">2.6<tspan class="dim">%</tspan></text>
+<rect x="496.1" y="205.8" width="50.4" height="2" fill="#eaf2ff" opacity=".85"/>
+<text x="521.3333333333333" y="198.8" font-size="20" text-anchor="middle">2.7<tspan class="dim">%</tspan></text>
 <rect x="577.5" y="215.9" width="50.4" height="2" fill="#eaf2ff" opacity=".85"/>
 <text x="602.6666666666666" y="208.9" font-size="20" text-anchor="middle">1.7<tspan class="dim">%</tspan></text>
 <rect x="658.8" y="225.1" width="50.4" height="2" fill="#eaf2ff" opacity=".85"/>
