@@ -59,7 +59,7 @@ text{font-family:VT,ui-monospace,Menlo,monospace;fill:#16151a}
 </g>
 <g ><path class="wave" style="animation-delay:0s" d="M159.0,169.3 A14 14 0 0 1 159.0,190.7 M141.0,190.7 A14 14 0 0 1 141.0,169.3" fill="none" stroke="#d10f2f" stroke-width="1.5"/><path class="wave" style="animation-delay:0.35s" d="M166.7,160.1 A26 26 0 0 1 166.7,199.9 M133.3,199.9 A26 26 0 0 1 133.3,160.1" fill="none" stroke="#d10f2f" stroke-width="1.5"/><path class="wave" style="animation-delay:0.7s" d="M174.4,150.9 A38 38 0 0 1 174.4,209.1 M125.6,209.1 A38 38 0 0 1 125.6,150.9" fill="none" stroke="#d10f2f" stroke-width="1.5"/></g>
 <circle cx="150" cy="180" r="5" fill="#d10f2f" />
-<text x="150" y="310" font-size="24" text-anchor="middle">33 <tspan class="dim">REPOS</tspan></text>
+<text x="150" y="310" font-size="24" text-anchor="middle">35 <tspan class="dim">REPOS</tspan></text>
 <text x="320" y="112" font-size="18" class="dim">CH01</text>
 <circle cx="372" cy="107" r="5" fill="#e06a00" />
 <text x="388" y="114" font-size="26">Cloudflare</text>

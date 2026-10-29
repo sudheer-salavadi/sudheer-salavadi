@@ -35,7 +35,7 @@ text{font-family:VT,ui-monospace,Menlo,monospace;fill:#16151a}
 <g class="flicker">
 <polygon points="34,38 47,45 34,52" fill="#d10f2f" />
 <text x="56" y="52" font-size="28" class="osd" >LANGUAGES</text>
-<text x="806" y="52" font-size="28" text-anchor="end" class="dim">INPUT <tspan class="osd">33</tspan> REPOS</text>
+<text x="806" y="52" font-size="28" text-anchor="end" class="dim">INPUT <tspan class="osd">35</tspan> REPOS</text>
 <g stroke="#dcd2bd" stroke-width="1" stroke-dasharray="2 3"><line x1="68" y1="92" x2="806" y2="92"/>
 <text x="62" y="97" font-size="17" text-anchor="end" class="dim" stroke="none">-0</text><line x1="68" y1="134.5" x2="806" y2="134.5"/>
 <text x="62" y="139.5" font-size="17" text-anchor="end" class="dim" stroke="none">-6</text><line x1="68" y1="177" x2="806" y2="177"/>
@@ -43,39 +43,39 @@ text{font-family:VT,ui-monospace,Menlo,monospace;fill:#16151a}
 <text x="62" y="224.5" font-size="17" text-anchor="end" class="dim" stroke="none">-18</text><line x1="68" y1="262" x2="806" y2="262"/>
 <text x="62" y="267" font-size="17" text-anchor="end" class="dim" stroke="none">-24</text></g>
 <g ><g mask="url(#seg)"><rect class="eq" style="animation-duration:1.10s;animation-delay:-0.00s" x="89.5" y="92.0" width="50.4" height="170.0" fill="#3178c6"/>
-<rect class="eq" style="animation-duration:1.47s;animation-delay:-0.29s" x="170.8" y="111.4" width="50.4" height="150.6" fill="#00ADD8"/>
-<rect class="eq" style="animation-duration:1.84s;animation-delay:-0.58s" x="252.1" y="124.8" width="50.4" height="137.2" fill="#F05138"/>
-<rect class="eq" style="animation-duration:2.21s;animation-delay:-0.87s" x="333.5" y="154.3" width="50.4" height="107.7" fill="#A97BFF"/>
-<rect class="eq" style="animation-duration:1.10s;animation-delay:-1.16s" x="414.8" y="209.4" width="50.4" height="52.6" fill="#3572A5"/>
-<rect class="eq" style="animation-duration:1.47s;animation-delay:-1.45s" x="496.1" y="212.8" width="50.4" height="49.2" fill="#f1e05a"/>
-<rect class="eq" style="animation-duration:1.84s;animation-delay:-1.74s" x="577.5" y="222.9" width="50.4" height="39.1" fill="#438eff"/>
-<rect class="eq" style="animation-duration:2.21s;animation-delay:-2.03s" x="658.8" y="232.1" width="50.4" height="29.9" fill="#e34c26"/>
-<rect class="eq" style="animation-duration:1.10s;animation-delay:-2.32s" x="740.1" y="232.1" width="50.4" height="29.9" fill="#b3aa98"/></g></g>
+<rect class="eq" style="animation-duration:1.47s;animation-delay:-0.29s" x="170.8" y="113.9" width="50.4" height="148.1" fill="#00ADD8"/>
+<rect class="eq" style="animation-duration:1.84s;animation-delay:-0.58s" x="252.1" y="123.1" width="50.4" height="138.9" fill="#F05138"/>
+<rect class="eq" style="animation-duration:2.21s;animation-delay:-0.87s" x="333.5" y="156.0" width="50.4" height="106.0" fill="#A97BFF"/>
+<rect class="eq" style="animation-duration:1.10s;animation-delay:-1.16s" x="414.8" y="210.0" width="50.4" height="52.0" fill="#3572A5"/>
+<rect class="eq" style="animation-duration:1.47s;animation-delay:-1.45s" x="496.1" y="210.8" width="50.4" height="51.2" fill="#f1e05a"/>
+<rect class="eq" style="animation-duration:1.84s;animation-delay:-1.74s" x="577.5" y="223.5" width="50.4" height="38.5" fill="#438eff"/>
+<rect class="eq" style="animation-duration:2.21s;animation-delay:-2.03s" x="658.8" y="232.5" width="50.4" height="29.5" fill="#e34c26"/>
+<rect class="eq" style="animation-duration:1.10s;animation-delay:-2.32s" x="740.1" y="232.4" width="50.4" height="29.6" fill="#b3aa98"/></g></g>
 <rect x="89.5" y="85.0" width="50.4" height="2" fill="#16151a" opacity=".85"/>
-<text x="114.66666666666666" y="78.0" font-size="20" text-anchor="middle">31.9<tspan class="dim">%</tspan></text>
-<rect x="170.8" y="104.4" width="50.4" height="2" fill="#16151a" opacity=".85"/>
-<text x="196" y="97.4" font-size="20" text-anchor="middle">25.1<tspan class="dim">%</tspan></text>
-<rect x="252.1" y="117.8" width="50.4" height="2" fill="#16151a" opacity=".85"/>
-<text x="277.3333333333333" y="110.8" font-size="20" text-anchor="middle">20.8<tspan class="dim">%</tspan></text>
-<rect x="333.5" y="147.3" width="50.4" height="2" fill="#16151a" opacity=".85"/>
-<text x="358.66666666666663" y="140.3" font-size="20" text-anchor="middle">12.8<tspan class="dim">%</tspan></text>
-<rect x="414.8" y="202.4" width="50.4" height="2" fill="#16151a" opacity=".85"/>
-<text x="440" y="195.4" font-size="20" text-anchor="middle">3.1<tspan class="dim">%</tspan></text>
-<rect x="496.1" y="205.8" width="50.4" height="2" fill="#16151a" opacity=".85"/>
-<text x="521.3333333333333" y="198.8" font-size="20" text-anchor="middle">2.7<tspan class="dim">%</tspan></text>
-<rect x="577.5" y="215.9" width="50.4" height="2" fill="#16151a" opacity=".85"/>
-<text x="602.6666666666666" y="208.9" font-size="20" text-anchor="middle">1.7<tspan class="dim">%</tspan></text>
-<rect x="658.8" y="225.1" width="50.4" height="2" fill="#16151a" opacity=".85"/>
-<text x="684" y="218.1" font-size="20" text-anchor="middle">1.0<tspan class="dim">%</tspan></text>
-<rect x="740.1" y="225.1" width="50.4" height="2" fill="#16151a" opacity=".85"/>
-<text x="765.3333333333333" y="218.1" font-size="20" text-anchor="middle">1.0<tspan class="dim">%</tspan></text>
+<text x="114.66666666666666" y="78.0" font-size="20" text-anchor="middle">32.1<tspan class="dim">%</tspan></text>
+<rect x="170.8" y="106.9" width="50.4" height="2" fill="#16151a" opacity=".85"/>
+<text x="196" y="99.9" font-size="20" text-anchor="middle">24.4<tspan class="dim">%</tspan></text>
+<rect x="252.1" y="116.1" width="50.4" height="2" fill="#16151a" opacity=".85"/>
+<text x="277.3333333333333" y="109.1" font-size="20" text-anchor="middle">21.5<tspan class="dim">%</tspan></text>
+<rect x="333.5" y="149.0" width="50.4" height="2" fill="#16151a" opacity=".85"/>
+<text x="358.66666666666663" y="142.0" font-size="20" text-anchor="middle">12.5<tspan class="dim">%</tspan></text>
+<rect x="414.8" y="203.0" width="50.4" height="2" fill="#16151a" opacity=".85"/>
+<text x="440" y="196.0" font-size="20" text-anchor="middle">3.0<tspan class="dim">%</tspan></text>
+<rect x="496.1" y="203.8" width="50.4" height="2" fill="#16151a" opacity=".85"/>
+<text x="521.3333333333333" y="196.8" font-size="20" text-anchor="middle">2.9<tspan class="dim">%</tspan></text>
+<rect x="577.5" y="216.5" width="50.4" height="2" fill="#16151a" opacity=".85"/>
+<text x="602.6666666666666" y="209.5" font-size="20" text-anchor="middle">1.6<tspan class="dim">%</tspan></text>
+<rect x="658.8" y="225.5" width="50.4" height="2" fill="#16151a" opacity=".85"/>
+<text x="684" y="218.5" font-size="20" text-anchor="middle">1.0<tspan class="dim">%</tspan></text>
+<rect x="740.1" y="225.4" width="50.4" height="2" fill="#16151a" opacity=".85"/>
+<text x="765.3333333333333" y="218.4" font-size="20" text-anchor="middle">1.0<tspan class="dim">%</tspan></text>
 <line x1="68" y1="262.5" x2="806" y2="262.5" stroke="#8a8170"/>
 <text x="114.66666666666666" y="288" font-size="20" text-anchor="middle">TypeScript</text>
-<text x="114.66666666666666" y="306" font-size="9" text-anchor="middle" class="silk dim">15 REPOS</text>
+<text x="114.66666666666666" y="306" font-size="9" text-anchor="middle" class="silk dim">16 REPOS</text>
 <text x="196" y="288" font-size="20" text-anchor="middle">Go</text>
 <text x="196" y="306" font-size="9" text-anchor="middle" class="silk dim">1 REPO</text>
 <text x="277.3333333333333" y="288" font-size="20" text-anchor="middle">Swift</text>
-<text x="277.3333333333333" y="306" font-size="9" text-anchor="middle" class="silk dim">2 REPOS</text>
+<text x="277.3333333333333" y="306" font-size="9" text-anchor="middle" class="silk dim">3 REPOS</text>
 <text x="358.66666666666663" y="288" font-size="20" text-anchor="middle">Kotlin</text>
 <text x="358.66666666666663" y="306" font-size="9" text-anchor="middle" class="silk dim">2 REPOS</text>
 <text x="440" y="288" font-size="20" text-anchor="middle">Python</text>
