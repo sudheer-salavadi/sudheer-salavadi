@@ -44,7 +44,7 @@ text{font-family:VT,ui-monospace,Menlo,monospace;fill:#16151a}
 <text x="62" y="267" font-size="17" text-anchor="end" class="dim" stroke="none">-24</text></g>
 <g ><g mask="url(#seg)"><rect class="eq" style="animation-duration:1.10s;animation-delay:-0.00s" x="89.5" y="92.0" width="50.4" height="170.0" fill="#3178c6"/>
 <rect class="eq" style="animation-duration:1.47s;animation-delay:-0.29s" x="170.8" y="113.9" width="50.4" height="148.1" fill="#00ADD8"/>
-<rect class="eq" style="animation-duration:1.84s;animation-delay:-0.58s" x="252.1" y="123.1" width="50.4" height="138.9" fill="#F05138"/>
+<rect class="eq" style="animation-duration:1.84s;animation-delay:-0.58s" x="252.1" y="122.3" width="50.4" height="139.7" fill="#F05138"/>
 <rect class="eq" style="animation-duration:2.21s;animation-delay:-0.87s" x="333.5" y="156.0" width="50.4" height="106.0" fill="#A97BFF"/>
 <rect class="eq" style="animation-duration:1.10s;animation-delay:-1.16s" x="414.8" y="210.0" width="50.4" height="52.0" fill="#3572A5"/>
 <rect class="eq" style="animation-duration:1.47s;animation-delay:-1.45s" x="496.1" y="210.8" width="50.4" height="51.2" fill="#f1e05a"/>
@@ -54,9 +54,9 @@ text{font-family:VT,ui-monospace,Menlo,monospace;fill:#16151a}
 <rect x="89.5" y="85.0" width="50.4" height="2" fill="#16151a" opacity=".85"/>
 <text x="114.66666666666666" y="78.0" font-size="20" text-anchor="middle">32.1<tspan class="dim">%</tspan></text>
 <rect x="170.8" y="106.9" width="50.4" height="2" fill="#16151a" opacity=".85"/>
-<text x="196" y="99.9" font-size="20" text-anchor="middle">24.4<tspan class="dim">%</tspan></text>
-<rect x="252.1" y="116.1" width="50.4" height="2" fill="#16151a" opacity=".85"/>
-<text x="277.3333333333333" y="109.1" font-size="20" text-anchor="middle">21.5<tspan class="dim">%</tspan></text>
+<text x="196" y="99.9" font-size="20" text-anchor="middle">24.3<tspan class="dim">%</tspan></text>
+<rect x="252.1" y="115.3" width="50.4" height="2" fill="#16151a" opacity=".85"/>
+<text x="277.3333333333333" y="108.3" font-size="20" text-anchor="middle">21.7<tspan class="dim">%</tspan></text>
 <rect x="333.5" y="149.0" width="50.4" height="2" fill="#16151a" opacity=".85"/>
 <text x="358.66666666666663" y="142.0" font-size="20" text-anchor="middle">12.5<tspan class="dim">%</tspan></text>
 <rect x="414.8" y="203.0" width="50.4" height="2" fill="#16151a" opacity=".85"/>
