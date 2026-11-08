@@ -43,8 +43,8 @@ text{font-family:VT,ui-monospace,Menlo,monospace;fill:#16151a}
 <text x="62" y="224.5" font-size="17" text-anchor="end" class="dim" stroke="none">-18</text><line x1="68" y1="262" x2="806" y2="262"/>
 <text x="62" y="267" font-size="17" text-anchor="end" class="dim" stroke="none">-24</text></g>
 <g ><g mask="url(#seg)"><rect class="eq" style="animation-duration:1.10s;animation-delay:-0.00s" x="89.5" y="92.0" width="50.4" height="170.0" fill="#3178c6"/>
-<rect class="eq" style="animation-duration:1.47s;animation-delay:-0.29s" x="170.8" y="120.3" width="50.4" height="141.7" fill="#00ADD8"/>
-<rect class="eq" style="animation-duration:1.84s;animation-delay:-0.58s" x="252.1" y="128.3" width="50.4" height="133.7" fill="#F05138"/>
+<rect class="eq" style="animation-duration:1.47s;animation-delay:-0.29s" x="170.8" y="120.2" width="50.4" height="141.8" fill="#00ADD8"/>
+<rect class="eq" style="animation-duration:1.84s;animation-delay:-0.58s" x="252.1" y="128.0" width="50.4" height="134.0" fill="#F05138"/>
 <rect class="eq" style="animation-duration:2.21s;animation-delay:-0.87s" x="333.5" y="160.6" width="50.4" height="101.4" fill="#A97BFF"/>
 <rect class="eq" style="animation-duration:1.10s;animation-delay:-1.16s" x="414.8" y="212.2" width="50.4" height="49.8" fill="#3572A5"/>
 <rect class="eq" style="animation-duration:1.47s;animation-delay:-1.45s" x="496.1" y="213.0" width="50.4" height="49.0" fill="#f1e05a"/>
@@ -53,10 +53,10 @@ text{font-family:VT,ui-monospace,Menlo,monospace;fill:#16151a}
 <rect class="eq" style="animation-duration:1.10s;animation-delay:-2.32s" x="740.1" y="233.3" width="50.4" height="28.7" fill="#b3aa98"/></g></g>
 <rect x="89.5" y="85.0" width="50.4" height="2" fill="#16151a" opacity=".85"/>
 <text x="114.66666666666666" y="78.0" font-size="20" text-anchor="middle">34.0<tspan class="dim">%</tspan></text>
-<rect x="170.8" y="113.3" width="50.4" height="2" fill="#16151a" opacity=".85"/>
-<text x="196" y="106.3" font-size="20" text-anchor="middle">23.6<tspan class="dim">%</tspan></text>
-<rect x="252.1" y="121.3" width="50.4" height="2" fill="#16151a" opacity=".85"/>
-<text x="277.3333333333333" y="114.3" font-size="20" text-anchor="middle">21.0<tspan class="dim">%</tspan></text>
+<rect x="170.8" y="113.2" width="50.4" height="2" fill="#16151a" opacity=".85"/>
+<text x="196" y="106.2" font-size="20" text-anchor="middle">23.6<tspan class="dim">%</tspan></text>
+<rect x="252.1" y="121.0" width="50.4" height="2" fill="#16151a" opacity=".85"/>
+<text x="277.3333333333333" y="114.0" font-size="20" text-anchor="middle">21.1<tspan class="dim">%</tspan></text>
 <rect x="333.5" y="153.6" width="50.4" height="2" fill="#16151a" opacity=".85"/>
 <text x="358.66666666666663" y="146.6" font-size="20" text-anchor="middle">12.1<tspan class="dim">%</tspan></text>
 <rect x="414.8" y="205.2" width="50.4" height="2" fill="#16151a" opacity=".85"/>
