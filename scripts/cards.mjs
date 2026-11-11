@@ -8,17 +8,17 @@ const SILK = font("Silkscreen");
 export const THEMES = {
   dark: {
     bg: "#05070b", fg: "#eaf2ff", dim: "#8190a6", osd: "#3dff9a",
-    c1: "#ff2bd6", c2: "#00e5ff", blend: "screen", glow: 2.2,
+    c1: "#ffb000", c2: "#00e5ff", blend: "screen", glow: 2.2,
     scan: "rgba(0,0,0,0.5)", noise: 0.07, vig: "#000", vigA: 0.85,
     roll: "#cfe6ff", rollA: 0.07, bez1: "#1b1e23", bez2: "#0a0b0e", rim: "rgba(255,255,255,0.07)",
     grid: "#1a2433", trace: "#3dff9a", other: "#4a5568",
   },
   light: {
-    bg: "#f2ecdf", fg: "#16151a", dim: "#8a8170", osd: "#d10f2f",
-    c1: "#ff2a4d", c2: "#1f5bff", blend: "multiply", glow: 0,
-    scan: "rgba(70,50,20,0.11)", noise: 0.1, vig: "#5c4a2c", vigA: 0.3,
-    roll: "#3a2a10", rollA: 0.06, bez1: "#e4dccb", bez2: "#cdc3ad", rim: "rgba(0,0,0,0.09)",
-    grid: "#dcd2bd", trace: "#d10f2f", other: "#b3aa98",
+    bg: "#ffffff", fg: "#141414", dim: "#7c7c7c", osd: "#141414",
+    c1: "#ff8a00", c2: "#1f5bff", blend: "multiply", glow: 0,
+    scan: "rgba(0,0,0,0.06)", noise: 0.06, vig: "#000", vigA: 0.1,
+    roll: "#000", rollA: 0.04, bez1: "#f0f0f0", bez2: "#d6d6d6", rim: "rgba(0,0,0,0.09)",
+    grid: "#e3e3e3", trace: "#141414", other: "#b0b0b0",
   },
 };
 
