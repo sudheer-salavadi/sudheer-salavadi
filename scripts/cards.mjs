@@ -10,20 +10,19 @@ export const THEMES = {
     bg: "#05070b", fg: "#eaf2ff", dim: "#8190a6", osd: "#3dff9a",
     c1: "#ffb000", c2: "#00e5ff", blend: "screen", glow: 2.2,
     scan: "rgba(0,0,0,0.5)", noise: 0.07, vig: "#000", vigA: 0.85,
-    roll: "#cfe6ff", rollA: 0.07, bez1: "#1b1e23", bez2: "#0a0b0e", rim: "rgba(255,255,255,0.07)",
+    roll: "#cfe6ff", rollA: 0.07,
     grid: "#1a2433", trace: "#3dff9a", other: "#4a5568",
   },
   light: {
     bg: "#ffffff", fg: "#141414", dim: "#7c7c7c", osd: "#141414",
     c1: "#ff8a00", c2: "#1f5bff", blend: "multiply", glow: 0,
     scan: "rgba(0,0,0,0.06)", noise: 0.06, vig: "#000", vigA: 0.1,
-    roll: "#000", rollA: 0.04, bez1: "#f0f0f0", bez2: "#d6d6d6", rim: "rgba(0,0,0,0.09)",
+    roll: "#000", rollA: 0.04,
     grid: "#e3e3e3", trace: "#141414", other: "#b0b0b0",
   },
 };
 
 const W = 840;
-const BEZEL = 8;
 const SMPTE = ["#c0c0c0", "#c0c000", "#00c0c0", "#00c000", "#e07000", "#c00000", "#0000c0"];
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
@@ -77,7 +76,6 @@ function playIcon(t, x, y) {
 }
 
 function screen(t, { h, title, body, defs = "", css = "" }) {
-  const s = BEZEL;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${h}" viewBox="0 0 ${W} ${h}" role="img" aria-label="${esc(title)}">
 <title>${esc(title)}</title>
 <defs>
@@ -98,17 +96,13 @@ text{font-family:VT,ui-monospace,Menlo,monospace;fill:${t.fg}}
 ${css}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
-<clipPath id="scr"><rect x="${s}" y="${s}" width="${W - 2 * s}" height="${h - 2 * s}" rx="14"/></clipPath>
 <pattern id="scan" width="4" height="3" patternUnits="userSpaceOnUse"><rect width="4" height="1" fill="${t.scan}"/></pattern>
 <pattern id="noise" width="96" height="96" patternUnits="userSpaceOnUse"><image width="96" height="96" href="data:image/png;base64,${NOISE}"/></pattern>
 <radialGradient id="vig" cx="50%" cy="50%" r="72%"><stop offset="50%" stop-color="${t.vig}" stop-opacity="0"/><stop offset="100%" stop-color="${t.vig}" stop-opacity="${t.vigA}"/></radialGradient>
 <linearGradient id="rollg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${t.roll}" stop-opacity="0"/><stop offset=".6" stop-color="${t.roll}" stop-opacity="${t.rollA}"/><stop offset="1" stop-color="${t.roll}" stop-opacity="0"/></linearGradient>
-<linearGradient id="bez" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${t.bez1}"/><stop offset="1" stop-color="${t.bez2}"/></linearGradient>
 <filter id="glow" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="${t.glow}" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
 ${defs}
 </defs>
-<rect width="${W}" height="${h}" rx="22" fill="url(#bez)"/>
-<g clip-path="url(#scr)">
 <rect width="${W}" height="${h}" fill="${t.bg}"/>
 <g class="flicker">
 ${body}
@@ -117,8 +111,6 @@ ${body}
 <rect width="${W}" height="${h}" fill="url(#scan)"/>
 <rect class="roll" width="${W}" height="100" fill="url(#rollg)"/>
 <rect width="${W}" height="${h}" fill="url(#vig)"/>
-</g>
-<rect x="${s + 0.5}" y="${s + 0.5}" width="${W - 2 * s - 1}" height="${h - 2 * s - 1}" rx="14" fill="none" stroke="${t.rim}"/>
 </svg>
 `;
 }
@@ -130,7 +122,7 @@ export function heroCard(t, { name, tagline, date }) {
   const nameText = esc(name);
   const mon = date.toLocaleString("en-US", { month: "short", timeZone: "UTC" }).toUpperCase();
   const stamp = `${mon}.${String(date.getUTCDate()).padStart(2, "0")} ${date.getUTCFullYear()}`;
-  const barW = (W - 2 * BEZEL) / SMPTE.length;
+  const barW = W / SMPTE.length;
 
   const slice = (id, cls, y0, y1) => `<g clip-path="url(#${id})"><g class="${cls}">
   <rect x="-60" y="${y0}" width="${W + 120}" height="${y1 - y0}" fill="${t.bg}"/>
@@ -150,7 +142,7 @@ ${slice("sa", "ga", nameY - 54, nameY - 40)}
 ${slice("sb", "gb", nameY - 28, nameY - 19)}
 <text x="${cx}" y="${nameY + 40}" font-size="12" text-anchor="middle" class="silk dim" style="letter-spacing:.42em">${esc(tagline)}</text>
 <text x="${cx}" y="${nameY + 76}" font-size="24" text-anchor="middle" class="osd" ${glowAttr(t)}>${stamp}</text>
-${SMPTE.map((c, i) => `<rect x="${(BEZEL + i * barW).toFixed(2)}" y="${h - BEZEL - 6}" width="${(barW + 0.5).toFixed(2)}" height="6" fill="${c}"/>`).join("")}`,
+${SMPTE.map((c, i) => `<rect x="${(i * barW).toFixed(2)}" y="${h - 6}" width="${(barW + 0.5).toFixed(2)}" height="6" fill="${c}"/>`).join("")}`,
   });
 }
 
